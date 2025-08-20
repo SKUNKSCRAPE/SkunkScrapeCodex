@@ -2,7 +2,6 @@
 
 A single source of truth for the scraping → enrichment → compliance → export pipeline. Built on Firebase + Google Cloud (Cloud Functions, Cloud Run, Pub/Sub, Scheduler, Storage, Firestore). Dialler-ready leads for STI campaigns, optimized for africa-south1.
 
-[![CI](https://github.com/SKUNKSCRAPE/SkunkScrapeCodex/actions/workflows/ci.yml/badge.svg)](https://github.com/SKUNKSCRAPE/SkunkScrapeCodex/actions/workflows/ci.yml)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/SKUNKSCRAPE/SkunkScrapeCodex/deploy.yml?label=Deploy)](https://github.com/SKUNKSCRAPE/SkunkScrapeCodex/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#license)
 [![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-24292e?logo=github)](https://skunkscrape.github.io/SkunkScrapeCodex/)
