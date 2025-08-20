@@ -1,0 +1,8 @@
+{
+  "name": "skunkscrape",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No tests\""
+  }
+}
