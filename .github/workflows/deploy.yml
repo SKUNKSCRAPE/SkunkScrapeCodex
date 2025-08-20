@@ -33,6 +33,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Run tests
+        run: npm test
       - name: Build & deploy Functions
         working-directory: functions
         run: |
@@ -47,4 +49,3 @@ jobs:
             gcloud run deploy scraper-brabys --image gcr.io/$GCP_PROJECT/scraper-brabys --region=africa-south1 --no-allow-unauthenticated
             gcloud builds submit --tag gcr.io/$GCP_PROJECT/scraper-autoclassifieds
             gcloud run deploy scraper-autoclassifieds --image gcr.io/$GCP_PROJECT/scraper-autoclassifieds --region=africa-south1 --no-allow-unauthenticated
-
