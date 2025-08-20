@@ -1,0 +1,49 @@
+name: Deploy (prod)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+      GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GCP_SA_KEY }}
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      HLR_PROVIDER: ${{ vars.HLR_PROVIDER }}
+      RECAPTCHA_MODE: ${{ vars.RECAPTCHA_MODE }}
+      EXPORT_BUCKET: ${{ vars.EXPORT_BUCKET }}
+      DEFAULT_BRAND: ${{ vars.DEFAULT_BRAND }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Node setup (Functions)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build & deploy Functions
+        working-directory: functions
+        run: |
+          npm ci
+          npm run build
+          npx firebase-tools deploy --only functions --token "$FIREBASE_TOKEN"
+
+      - name: Build & deploy Cloud Run (scrapers)
+        working-directory: scrapers
+        run: |
+          gcloud builds submit --tag gcr.io/$GCP_PROJECT/scraper-brabys
+          gcloud run deploy scraper-brabys --image gcr.io/$GCP_PROJECT/scraper-brabys --region=africa-south1 --no-allow-unauthenticated
+          gcloud builds submit --tag gcr.io/$GCP_PROJECT/scraper-autoclassifieds
+          gcloud run deploy scraper-autoclassifieds --image gcr.io/$GCP_PROJECT/scraper-autoclassifieds --region=africa-south1 --no-allow-unauthenticated
